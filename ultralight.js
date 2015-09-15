@@ -21,27 +21,27 @@ function ultralight(){
 		//given the URL hash as an array, return the corresponding value from ul.routes
 		var key, auxkey, route, template, data, auxdata, html;
 
-		for(key in ul.routes){
-			route = key.split('/')
-			routeData = this.compareRoutes(hashArray, route)
-			if(routeData){
+		route = document.getElementById('body').getAttribute('route');
+		routeArray = route.split('/');
+		routeData = this.compareRoutes(hashArray, routeArray)
 
-				//add additional data to the view as neessary:
-				if (typeof ulAuxilaryData === "function"){
-					auxdata = ulAuxilaryData(key, routeData)
-					for(auxkey in auxdata){
-						routeData[auxkey] = auxdata[auxkey]
-					}
+		if(routeData){
+
+			//add additional data to the view as neessary:
+			if (typeof ulAuxilaryData === "function"){
+				auxdata = ulAuxilaryData(route, routeData)
+				for(auxkey in auxdata){
+					routeData[auxkey] = auxdata[auxkey]
 				}
-
-				//render template
-				template = document.getElementById(ul.routes[key]).innerHTML;
-				html = Mustache.to_html(template, routeData, ul.partials);
-				document.getElementById('content').innerHTML += html;
-				return 0;
 			}
 
-		}
+			//render template
+			template = document.getElementById('body').innerHTML;
+			html = Mustache.to_html(template, routeData, ul.partials);
+			document.getElementById('content').innerHTML += html;
+			return 0;
+		}		
+
 		return 404;
 	}
 
@@ -66,38 +66,16 @@ function ultralight(){
 		return data;
 	}
 
-	this.loadJSON = function(callback, file) {   
-		// pull in some json, thx http://codepen.io/KryptoniteDove/blog/load-json-file-locally-using-pure-javascript
-	    var xobj = new XMLHttpRequest();
-	        xobj.overrideMimeType("application/json");
-	    xobj.open('GET', file, true);
-	    xobj.onreadystatechange = function () {
-	          if (xobj.readyState == 4 && xobj.status == "200") {
-	            callback(xobj.responseText);
-	          }
-	    };
-	    xobj.send(null);  
-	}
-
-	// pull in templates
-	this.loadJSON(function(response) {
-    	this.routes = JSON.parse(response);
-	}.bind(this), 'data/routes.json');
-
-	// pull in partials
-	this.loadJSON(function(response) {
-    	this.partials = JSON.parse(response);
-	}.bind(this), 'data/partials.json');	
-
 }
 
 window.onload = function(){
-	var key, hash;
+	var i, key, hash, partials = {};
 
 	//set up partials
-	for(key in ul.partials){
-		ul.partials[key] = document.getElementById(key).innerHTML
+	for(i=0; i<ul.partials.length; i++){
+		partials[ul.partials[i]] = document.getElementById(ul.partials[i]).innerHTML
 	}
+	ul.partials = partials
 
 	//render the route and report status in the console.
 	hash = ul.parseHash()
