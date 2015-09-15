@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    	<script src='https://raw.githubusercontent.com/janl/mustache.js/master/mustache.js' type="text/javascript"></script>
+    	<script src='ultralight.js' type="text/javascript"></script>
+    	<script src='auxData.js' type="text/javascript"></script>
+
+
+        <!--Templates-->
+        <!-- Pages -->
+        <script id="firstCompanion" type="text/template">
+        	<table id='test'>
+        		{{#q}}
+	        		{{> firstCompanionRow}}
+	        	{{/q}}
+        	</table>	
+        </script>
+
+        <!-- Partials -->
+        <script id="firstCompanionRow" type="text/template">
+            <tr>
+                <td>Species: {{species}}-{{A}}</td>
+                <td>Charge State: {{.}}</td>
+                <td>A/Q: 0</td>
+                <td>Possible Companions:</td>
+                <td>Transmission Current:</td>
+            </tr>
+        </script>
+
+    </head>
+
+    <body id='content'>
+    </body>
+</html>
