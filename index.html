@@ -11,25 +11,16 @@
         <script id="body" type="text/template" route="{{species}}/{{A}}">
         	<table id='test'>
         		{{#q}}
-	        		{{> firstCompanionRow}}
+		            <tr>
+		                <td>Species: {{species}}-{{A}}</td>
+		                <td>Charge State: {{.}}</td>
+		                <td>A/Q: 0</td>
+		                <td>Possible Companions:</td>
+		                <td>Transmission Current:</td>
+		            </tr>
 	        	{{/q}}
         	</table>	
         </script>
-
-        <!-- Partials -->
-        <script id="firstCompanionRow" type="text/template">
-            <tr>
-                <td>Species: {{species}}-{{A}}</td>
-                <td>Charge State: {{.}}</td>
-                <td>A/Q: 0</td>
-                <td>Possible Companions:</td>
-                <td>Transmission Current:</td>
-            </tr>
-        </script>
-        <script type="text/javascript">
-        	ul.partials = ['firstCompanionRow']
-        </script>
-
 
     </head>
 

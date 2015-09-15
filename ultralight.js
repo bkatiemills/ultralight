@@ -29,7 +29,7 @@ function ultralight(){
 
 			//add additional data to the view as neessary:
 			if (typeof ulAuxilaryData === "function"){
-				auxdata = ulAuxilaryData(route, routeData)
+				auxdata = ulAuxilaryData(routeData)
 				for(auxkey in auxdata){
 					routeData[auxkey] = auxdata[auxkey]
 				}
@@ -37,7 +37,7 @@ function ultralight(){
 
 			//render template
 			template = document.getElementById('body').innerHTML;
-			html = Mustache.to_html(template, routeData, ul.partials);
+			html = Mustache.to_html(template, routeData);
 			document.getElementById('content').innerHTML += html;
 			return 0;
 		}		
@@ -69,13 +69,7 @@ function ultralight(){
 }
 
 window.onload = function(){
-	var i, key, hash, partials = {};
-
-	//set up partials
-	for(i=0; i<ul.partials.length; i++){
-		partials[ul.partials[i]] = document.getElementById(ul.partials[i]).innerHTML
-	}
-	ul.partials = partials
+	var i, key, hash;
 
 	//render the route and report status in the console.
 	hash = ul.parseHash()
