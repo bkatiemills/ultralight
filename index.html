@@ -9,17 +9,21 @@
 
         <!--Step 2: Create your page using traditional html + mustache templating. -->
         <!--Assign an id of "body" and a route custom attribute.-->
-        <script id="body" type="text/template" route="{{species}}/{{A}}">
-        	<table id='test'>
-        		{{#q}}
-		            <tr>
-		                <td>Species: {{species}}-{{A}}</td>
-		                <td>Charge State: {{.}}</td>
-		                <td>A/Q: 0</td>
-		                <td>Possible Companions:</td>
-		            </tr>
-	        	{{/q}}
-        	</table>	
+        <script id="body" type="text/template" route="{{cats}}">
+			<h1>Welcome to Ultralight</h1>
+			<p>A scaffold for simple web apps.</p>
+			{{#images}}
+				<img src={{.}}></img>
+			{{/images}}
+
+			<p>How many Pixels can I offer you?</p>
+			<ul>
+				<li><a href='#1'>One Pixel</a></li>
+				<li><a href='#2'>Two Pixels</a></li>
+				<li><a href='#3'>Three Pixels</a></li>
+				<li><a href='#4'>Four Pixels</a></li>
+				<li><a href='#5'>Five Pixels</a></li>
+			</ul>
         </script>
 
         <!--Step 3: list your partials by filename if you're using any (optional)-->
