@@ -1,6 +1,6 @@
 function ultralight(partials){
 
-	this.partials = partials;
+	this.partials = partials ? partials : [];
 
 	this.parseHash = function(){
 		// split the url hash up into an array of strings.
