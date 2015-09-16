@@ -11,3 +11,7 @@ Ultralight seeks to allow users with a casual commitment to web development to m
 ## Contributing
 
 Ultralight is a simple sketch at the moment. A huge help would be to open an issue with your comments or ideas, or participate in one of the ongoing conversation there.
+
+## Thanks
+
+The templating half of ultralight is nothing but [mustache.js](https://github.com/janl/mustache.js/) - big thanks to that team!
