@@ -12,11 +12,11 @@ function ulAuxilaryData(route, data){
 	if(route == "{{cats}}")
 		return {'images': 
 			[
-				url+'img/pix1',
-				url+'img/pix2',
-				url+'img/pix3',
-				url+'img/pix4',
-				url+'img/pix5'
+				url+'img/pix1.jpg',
+				url+'img/pix2.jpg',
+				url+'img/pix3.jpg',
+				url+'img/pix4.jpg',
+				url+'img/pix5.jpg'
 			]
 		}
 	return {}
