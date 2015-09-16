@@ -3,6 +3,8 @@ function ulAuxilaryData(route, data){
 	var url, path, i, pics,
 	numcats = parseInt(data['cats']);
 
+	console.log(numcats)
+
 	//extract the base URL where this page is found.
 	url = window.location.protocol + "//" + window.location.host + "/" 
 	path = window.location.pathname.split('/').slice(0,-1);
