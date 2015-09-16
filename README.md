@@ -15,3 +15,5 @@ Ultralight is a simple sketch at the moment. A huge help would be to open an iss
 ## Thanks
 
 The templating half of ultralight is nothing but [mustache.js](https://github.com/janl/mustache.js/) - big thanks to that team!
+
+This work is supported by the [GRIFFIN Collaboration](https://github.com/GRIFFINCollaboration) at TRIUMF, Canada's national lab for nuclear & particle physics.
