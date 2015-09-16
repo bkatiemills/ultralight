@@ -1,6 +1,6 @@
 function ultralight(partials){
 
-	this.partials = partials;
+	this.partials = partials ? partials : [];
 
 	this.parseHash = function(){
 		// split the url hash up into an array of strings.
@@ -40,7 +40,7 @@ function ultralight(partials){
 			//render template
 			template = document.getElementById('body').innerHTML;
 			html = Mustache.to_html(template, routeData, ul.partials);
-			document.getElementById('content').innerHTML += html;
+			document.body.innerHTML += html;
 			return 0;
 		}		
 
