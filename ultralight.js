@@ -40,7 +40,7 @@ function ultralight(partials){
 			//render template
 			template = document.getElementById('body').innerHTML;
 			html = Mustache.to_html(template, routeData, ul.partials);
-			document.getElementById('content').innerHTML += html;
+			document.body.innerHTML += html;
 			return 0;
 		}		
 
