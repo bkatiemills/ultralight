@@ -1,5 +1,6 @@
 function ultralight(partials){
-
+	var i;
+ 
 	this.partials = partials ? partials : [];
 
 	this.parseHash = function(){
@@ -70,54 +71,83 @@ function ultralight(partials){
 		return data;
 	}
 
-	this.fetchPartial = function(template){
-		// fetch a partial from the server
-		var url, path, oReq = new XMLHttpRequest();
+	this.promisePartials = function(){
+		// pull in all partials async, by the power of promises
 
-		url = window.location.protocol + "//" + window.location.host + "/" 
-		path = window.location.pathname.split('/').slice(0,-1);
-		for(i=0; i<path.length; i++){
-			url += path[i] + '/'
-		}
+		sequence = Promise.resolve();
 
-		function callback () {
-		  document.getElementById(template).innerHTML = this.responseText;
-		}
+		sequence.then(function(x){
+			return Promise.all(this.partials.map(ulUtilGet))
+		}).then(function(partials){
 
-		oReq.addEventListener("load", callback);
-		oReq.open("GET", url+'partials/'+template+'.mustache');
-		oReq.send();
+			for(i=0; i<partials.length; i++){
+				partial = document.createElement('script');
+				partial.setAttribute('type', 'text/template');
+				partial.setAttribute('id', this.partials[i]);
+				partial.innerHTML = partials[i]
+				document.getElementsByTagName('head')[0].appendChild(partial);
+
+			}
+
+		}).then(function() {
+			var i, key, hash, partials = {};
+
+			//set up partials
+			for(i=0; i<ul.partials.length; i++){
+				partials[ul.partials[i]] = document.getElementById(ul.partials[i]).innerHTML;
+			}
+			ul.partials = partials;
+
+			//render the route and report status in the console.
+			hash = ul.parseHash()
+			console.log(ul.matchRoute(hash))
+		});
 	}
 
-	this.createPartial = function(prtl){
-		// callback for fetch template when loading a partial
+	this.promisePartials()
 
-		partial = document.createElement('script');
-		partial.setAttribute('type', 'text/template');
-		partial.setAttribute('id', prtl);
-
-		document.getElementsByTagName('head')[0].appendChild(partial);
-	}
-
-	//load partials templates
-	for(i=0; i<this.partials.length; i++){
-		this.createPartial(this.partials[i]);
-		this.fetchPartial(this.partials[i], this.createPartial);
-	}
 }
 
-window.onload = function(){
-	var i, key, hash, partials = {};
+function ulUtilGet(name) {
+	// promise to get tempate <name>; thanks http://www.html5rocks.com/en/tutorials/es6/promises/
+	var rootURL, path;
 
-	//set up partials
-	for(i=0; i<ul.partials.length; i++){
-		partials[ul.partials[i]] = document.getElementById(ul.partials[i]).innerHTML;
+	rootURL = window.location.protocol + "//" + window.location.host;
+	path = window.location.pathname.split('/').slice(0,-1);
+	for(i=0; i<path.length; i++){
+		rootURL += path[i] + '/'
 	}
-	ul.partials = partials;
 
-	//render the route and report status in the console.
-	hash = ul.parseHash()
-	console.log(ul.matchRoute(hash))
+	url = rootURL + 'partials/' + name + '.mustache';
+
+	// Return a new promise.
+ 	return new Promise(function(resolve, reject) {
+		// Do the usual XHR stuff
+    	var req = new XMLHttpRequest();
+    	req.open('GET', url);
+
+    	req.onload = function() {
+      		// This is called even on 404 etc
+      		// so check the status
+      		if (req.status == 200) {
+        		// Resolve the promise with the response text
+        		resolve(req.response);
+      		}
+      		else {
+        		// Otherwise reject with the status text
+        		// which will hopefully be a meaningful error
+        		reject(Error(req.statusText));
+      		}
+    	};
+
+	    // Handle network errors
+	    req.onerror = function() {
+    		reject(Error("Network Error"));
+    	};
+
+	    // Make the request
+	    req.send();
+  	});
 }
 
 window.onhashchange = function(){
