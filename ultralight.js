@@ -142,7 +142,7 @@ function ulUtilGet(name) {
 	// promise to get tempate <name>.
 	var rootURL, path;
 
-	rootURL = window.location.protocol + "//" + window.location.host + "/";
+	rootURL = window.location.protocol + "//" + window.location.host;
 	path = window.location.pathname.split('/').slice(0,-1);
 	for(i=0; i<path.length; i++){
 		rootURL += path[i] + '/'
