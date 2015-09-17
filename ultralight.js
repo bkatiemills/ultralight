@@ -71,35 +71,6 @@ function ultralight(partials){
 		return data;
 	}
 
-	// this.fetchPartial = function(template){
-	// 	// fetch a partial from the server
-	// 	var url, path, oReq = new XMLHttpRequest();
-
-	// 	url = window.location.protocol + "//" + window.location.host + "/" 
-	// 	path = window.location.pathname.split('/').slice(0,-1);
-	// 	for(i=0; i<path.length; i++){
-	// 		url += path[i] + '/'
-	// 	}
-
-	// 	function callback () {
-	// 	  document.getElementById(template).innerHTML = this.responseText;
-	// 	}
-
-	// 	oReq.addEventListener("load", callback);
-	// 	oReq.open("GET", url+'partials/'+template+'.mustache');
-	// 	oReq.send();
-	// }
-
-	// this.createPartial = function(prtl){
-	// 	// callback for fetch template when loading a partial
-
-	// 	partial = document.createElement('script');
-	// 	partial.setAttribute('type', 'text/template');
-	// 	partial.setAttribute('id', prtl);
-
-	// 	document.getElementsByTagName('head')[0].appendChild(partial);
-	// }
-
 	this.promisePartials = function(){
 		// pull in all partials async, by the power of promises
 
@@ -138,7 +109,7 @@ function ultralight(partials){
 }
 
 function ulUtilGet(name) {
-	// promise to get tempate <name>.
+	// promise to get tempate <name>; thanks http://www.html5rocks.com/en/tutorials/es6/promises/
 	var rootURL, path;
 
 	rootURL = window.location.protocol + "//" + window.location.host;
