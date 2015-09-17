@@ -110,10 +110,9 @@ function ultralight(partials){
 		}).then(function(partials){
 
 			for(i=0; i<partials.length; i++){
-
 				partial = document.createElement('script');
 				partial.setAttribute('type', 'text/template');
-				partial.setAttribute('id', 'picture'); //hack for demo
+				partial.setAttribute('id', this.partials[i]);
 				partial.innerHTML = partials[i]
 				document.getElementsByTagName('head')[0].appendChild(partial);
 
@@ -149,7 +148,6 @@ function ulUtilGet(name) {
 	}
 
 	url = rootURL + 'partials/' + name + '.mustache';
-	console.log(url)
 
 	// Return a new promise.
  	return new Promise(function(resolve, reject) {
