@@ -101,6 +101,11 @@ function ultralight(partials){
 			//render the route and report status in the console.
 			hash = ul.parseHash()
 			console.log(ul.matchRoute(hash))
+		}).then(function(){
+			//allow a post-rendering callback
+			if(typeof ulCallback === "function"){
+				ulCallback();
+			}
 		});
 	}
 
