@@ -102,7 +102,7 @@ function ultralight(partials){
 	//load partials templates
 	for(i=0; i<this.partials.length; i++){
 		this.createPartial(this.partials[i]);
-		this.fetchPartial(this.partials[i], this.createPartial);
+		this.fetchPartial(this.partials[i]);
 	}
 }
 
