@@ -146,7 +146,7 @@ window.onhashchange = function(){
 			function get(name) {
 
 				// hack for proof of principle
-				url = 'file:///Users/billmills/Desktop/projects/ultralight/partials/picture.mustache'
+				url = 'http://billmills.github.io/ultralight/partials/picture.mustache'
 
 			  // Return a new promise.
 			  return new Promise(function(resolve, reject) {
