@@ -15,7 +15,6 @@ function ulAuxilaryData(route, data){
 		for(i=0; i<numcats; i++){
 			pics[pics.length] = url+'img/pix'+(i+1)+'.jpg';
 		}
-		console.log(pics)
 		return {'images': pics}
 	}
 	return {}
