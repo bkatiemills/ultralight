@@ -99,11 +99,11 @@ function ultralight(partials){
 		document.getElementsByTagName('head')[0].appendChild(partial);
 	}
 
-	//load partials templates
-	for(i=0; i<this.partials.length; i++){
-		this.createPartial(this.partials[i]);
-		this.fetchPartial(this.partials[i]);
-	}
+	// //load partials templates
+	// for(i=0; i<this.partials.length; i++){
+	// 	this.createPartial(this.partials[i]);
+	// 	this.fetchPartial(this.partials[i]);
+	// }
 }
 
 window.onload = function(){
