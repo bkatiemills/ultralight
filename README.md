@@ -1,6 +1,6 @@
 # ultralight
 
-Ultralight is a simple tool to help novice web developers make simple client-side web apps that have stateful URLs, basic templating, and *that's it*.
+Ultralight is a simple tool to help novice web developers make simple client-side web apps that have stateful URLs, basic templating, and *that's it*. You can see a demo of Ultralight in action right here on the [gh-pages branch](http://billmills.github.io/ultralight/index.html#1).
 
 ## Why are we doing this?
 
