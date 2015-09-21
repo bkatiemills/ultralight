@@ -1,6 +1,6 @@
 function ultralight(partials){
 	var i;
- 
+
 	if(partials.constructor === Array){
 		this.partials = partials;
 	} else{
@@ -45,8 +45,8 @@ function ultralight(partials){
 			//render template
 			template = document.getElementById('body').innerHTML;
 			html = Mustache.to_html(template, routeData, ul.partials);
-			body = document.createElement('body');
-			document.getElementsByTagName('body')[0].appendChild(body);
+			//body = document.createElement('body'); //see #4
+			//document.getElementsByTagName('body')[0].appendChild(body);
 			document.body.innerHTML += html;
 			return 0;
 		}		
@@ -83,7 +83,6 @@ function ultralight(partials){
 		sequence.then(function(){
 			return Promise.all(ul.partials.map(ulUtilGet))
 		}).then(function(partials){
-
 			for(i=0; i<partials.length; i++){
 				partial = document.createElement('script');
 				partial.setAttribute('type', 'text/template');
