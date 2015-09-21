@@ -1,7 +1,11 @@
 function ultralight(partials){
 	var i;
  
-	this.partials = partials ? partials : [];
+	if(partials.constructor === Array){
+		this.partials = partials;
+	} else{
+		this.partials = [];
+	}
 
 	this.parseHash = function(){
 		// split the url hash up into an array of strings.
@@ -74,16 +78,16 @@ function ultralight(partials){
 	this.promisePartials = function(){
 		// pull in all partials async, by the power of promises
 
-		sequence = Promise.resolve();
+		var sequence = Promise.resolve();
 
-		sequence.then(function(x){
-			return Promise.all(this.partials.map(ulUtilGet))
+		sequence.then(function(){
+			return Promise.all(ul.partials.map(ulUtilGet))
 		}).then(function(partials){
 
 			for(i=0; i<partials.length; i++){
 				partial = document.createElement('script');
 				partial.setAttribute('type', 'text/template');
-				partial.setAttribute('id', this.partials[i]);
+				partial.setAttribute('id', ul.partials[i]);
 				partial.innerHTML = partials[i]
 				document.getElementsByTagName('head')[0].appendChild(partial);
 
