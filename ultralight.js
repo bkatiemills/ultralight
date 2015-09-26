@@ -1,4 +1,4 @@
-function ultralight(partials){
+function ultralight(partials, dataLoader, callback){
 	var i;
 
 	if(partials.constructor === Array){
@@ -6,6 +6,12 @@ function ultralight(partials){
 	} else{
 		this.partials = [];
 	}
+
+	if(typeof dataLoader === 'function')
+		this.ulAuxilaryData = dataLoader;
+
+	if(typeof callback === 'function')
+		this.callback = callback;	
 
 	this.parseQuery = function(){
 		//return an object with keys/values as per query string
@@ -31,8 +37,8 @@ function ultralight(partials){
 			queryData = this.parseQuery();
 
 		//add additional data as necessary
-		if(typeof ulAuxilaryData === 'function'){
-			auxdata = ulAuxilaryData(queryData)
+		if(typeof this.ulAuxilaryData === 'function'){
+			auxdata = this.ulAuxilaryData(queryData)
 
 			for(auxkey in auxdata){
 				queryData[auxkey] = auxdata[auxkey];
@@ -41,9 +47,9 @@ function ultralight(partials){
 
 		//render template
 		template = document.getElementById('body').innerHTML;
-		html = Mustache.to_html(template, queryData, ul.partials);
-		//body = document.createElement('body'); //see #4
-		//document.getElementsByTagName('body')[0].appendChild(body);
+		html = Mustache.to_html(template, queryData, this.partials);
+		body = document.createElement('body');
+		document.getElementsByTagName('body')[0].appendChild(body);
 		document.body.innerHTML += html;
 		return 0;
 
@@ -53,22 +59,23 @@ function ultralight(partials){
 		// pull in all partials async, by the power of promises
 
 		var sequence = Promise.resolve();
+		var partials = this.partials
 
 		sequence.then(function(){
-			return Promise.all(ul.partials.map(ulUtilGet))
+			return Promise.all(partials.map(ulUtilGet))
 		}).then(function(partials){
 			for(i=0; i<partials.length; i++){
 				partial = document.createElement('script');
 				partial.setAttribute('type', 'text/template');
-				partial.setAttribute('id', ul.partials[i]);
+				partial.setAttribute('id', this.partials[i]);
 				partial.innerHTML = partials[i]
 				document.getElementsByTagName('head')[0].appendChild(partial);
-
 			}
+			return this
 
-		}).then(function() {
+		}.bind(this)).then(function(ul) {
 			var i, key, hash, query, partials = {};
-
+			
 			//set up partials
 			for(i=0; i<ul.partials.length; i++){
 				partials[ul.partials[i]] = document.getElementById(ul.partials[i]).innerHTML;
@@ -77,10 +84,12 @@ function ultralight(partials){
 
 			//render the route
 			ul.matchQuery();
-		}).then(function(){
+
+			return ul
+		}).then(function(ul){
 			//allow a post-rendering callback
-			if(typeof ulCallback === "function"){
-				ulCallback();
+			if(typeof ul.callback === "function"){
+				ul.callback();
 			}
 		});
 	}
