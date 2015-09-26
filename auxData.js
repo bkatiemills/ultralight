@@ -1,4 +1,4 @@
-function ulAuxilaryData(route, data){
+function loadCatData(data){
 
 	var url, path, i, pics,
 	numcats = parseInt(data['cats']);
@@ -10,12 +10,10 @@ function ulAuxilaryData(route, data){
 		url += path[i] + '/'
 	}
 
-	if(route == "{{cats}}"){
-		pics = []
-		for(i=0; i<numcats; i++){
-			pics[pics.length] = url+'img/pix'+(i+1)+'.jpg';
-		}
-		return {'images': pics}
+	pics = []
+	for(i=0; i<numcats; i++){
+		pics[pics.length] = url+'img/pix'+(i+1)+'.jpg';
 	}
-	return {}
+	return {'images': pics}
+
 }

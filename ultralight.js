@@ -1,96 +1,76 @@
-function ultralight(partials){
+function ultralight(partials, dataLoader){
 	var i;
- 
-	this.partials = partials ? partials : [];
 
-	this.parseHash = function(){
-		// split the url hash up into an array of strings.
-		// if there's no hash, return an empty array.
-	    var elts, hash;
-
-	    hash = window.location.hash;
-	    hash = hash.slice(1,hash.length)
-
-	    if(hash){
-	        elts = hash.split('/')
-	    } else
-	        elts = []
-
-	    return elts
+	if(partials.constructor === Array){
+		this.partials = partials;
+	} else{
+		this.partials = [];
 	}
 
-	this.matchRoute = function(hashArray){
-		//given the URL hash as an array, return the corresponding value from ul.routes
-		var key, auxkey, route, template, data, auxdata, html;
+	if(typeof dataLoader === 'function')
+		this.ulAuxilaryData = dataLoader;
 
-		route = document.getElementById('body').getAttribute('route');
-		routeArray = route.split('/');
-		routeData = this.compareRoutes(hashArray, routeArray)
+	this.parseQuery = function(){
+		//return an object with keys/values as per query string
+		//note all values will be strings.
 
-		if(routeData){
+		var queryString = window.location.search.substring(1);
+		var elts = {};
+		var value, i;
 
-			//add additional data to the view as neessary:
-			if (typeof ulAuxilaryData === "function"){
-				auxdata = ulAuxilaryData(route, routeData)
-
-				for(auxkey in auxdata){
-					routeData[auxkey] = auxdata[auxkey]
-				}
-			}
-
-			//render template
-			template = document.getElementById('body').innerHTML;
-			html = Mustache.to_html(template, routeData, ul.partials);
-			body = document.createElement('body');
-			document.getElementsByTagName('body')[0].appendChild(body);
-			document.body.innerHTML += html;
-			return 0;
-		}		
-
-		return 404;
-	}
-
-	this.compareRoutes = function(hash, route){
-		//helper for comparing route arrays. hash is from the url hash, route is from ul.routes
-
-		var key,
-			data = {}
-
-	 	if (hash == null || route == null) return false;
-		if (hash.length != route.length) return false;
-
-		for (var i = 0; i < hash.length; ++i) {
-			// deal with variable routes
-			if(route[i].slice(0,2) == '{{'){
-				key = route[i].substring(2, route[i].length - 2);
-				data[key] = hash[i];
-				continue;
-			} else if (hash[i] !== route[i])
-				return false;
+		queryString = queryString.split('&');
+		for(i=0; i<queryString.length; i++){
+			value = queryString[i].split('=');
+			elts[value[0]] = value[1];
 		}
-		return data;
+
+		return elts;
+
+	}
+
+	this.matchQuery = function(){
+		//given the URL query as an object, render the appropriate templates
+		var auxdata, auxkey, 
+			queryData = this.parseQuery();
+
+		//add additional data as necessary
+		if(typeof this.ulAuxilaryData === 'function'){
+			auxdata = this.ulAuxilaryData(queryData)
+
+			for(auxkey in auxdata){
+				queryData[auxkey] = auxdata[auxkey];
+			}
+		}
+
+		//render template
+		template = document.getElementById('body').innerHTML;
+		html = Mustache.to_html(template, queryData, ul.partials);
+		body = document.createElement('body'); //see #4
+		document.getElementsByTagName('body')[0].appendChild(body);
+		document.body.innerHTML += html;
+		return 0;
+
 	}
 
 	this.promisePartials = function(){
 		// pull in all partials async, by the power of promises
 
-		sequence = Promise.resolve();
+		var sequence = Promise.resolve();
 
-		sequence.then(function(x){
-			return Promise.all(this.partials.map(ulUtilGet))
+		sequence.then(function(){
+			return Promise.all(ul.partials.map(ulUtilGet))
 		}).then(function(partials){
-
 			for(i=0; i<partials.length; i++){
 				partial = document.createElement('script');
 				partial.setAttribute('type', 'text/template');
-				partial.setAttribute('id', this.partials[i]);
+				partial.setAttribute('id', ul.partials[i]);
 				partial.innerHTML = partials[i]
 				document.getElementsByTagName('head')[0].appendChild(partial);
 
 			}
 
 		}).then(function() {
-			var i, key, hash, partials = {};
+			var i, key, hash, query, partials = {};
 
 			//set up partials
 			for(i=0; i<ul.partials.length; i++){
@@ -98,9 +78,13 @@ function ultralight(partials){
 			}
 			ul.partials = partials;
 
-			//render the route and report status in the console.
-			hash = ul.parseHash()
-			console.log(ul.matchRoute(hash))
+			//render the route
+			ul.matchQuery();
+		}).then(function(){
+			//allow a post-rendering callback
+			if(typeof ulCallback === "function"){
+				ulCallback();
+			}
 		});
 	}
 
@@ -149,9 +133,3 @@ function ulUtilGet(name) {
 	    req.send();
   	});
 }
-
-window.onhashchange = function(){
-	// since we're using hashes like full-fledged routes.
-	location.reload(false)
-}
-
