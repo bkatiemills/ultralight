@@ -1,4 +1,4 @@
-function ultralight(partials, dataLoader){
+function ultralight(partials, dataLoader, callback){
 	var i;
 
 	if(partials.constructor === Array){
@@ -9,6 +9,9 @@ function ultralight(partials, dataLoader){
 
 	if(typeof dataLoader === 'function')
 		this.ulAuxilaryData = dataLoader;
+
+	if(typeof callback === 'function')
+		this.callback = callback;	
 
 	this.parseQuery = function(){
 		//return an object with keys/values as per query string
@@ -81,10 +84,12 @@ function ultralight(partials, dataLoader){
 
 			//render the route
 			ul.matchQuery();
-		}).then(function(){
+
+			return ul
+		}).then(function(ul){
 			//allow a post-rendering callback
-			if(typeof ulCallback === "function"){
-				ulCallback();
+			if(typeof ul.callback === "function"){
+				ul.callback();
 			}
 		});
 	}
