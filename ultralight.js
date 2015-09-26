@@ -31,7 +31,7 @@ function ultralight(partials){
 		routeArray = route.split('/');
 		routeData = this.compareRoutes(hashArray, routeArray)
 
-		if(routeData){
+		if(routeData || hashArray.length == 0){
 
 			//add additional data to the view as neessary:
 			if (typeof ulAuxilaryData === "function"){
