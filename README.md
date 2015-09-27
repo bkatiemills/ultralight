@@ -1,5 +1,7 @@
 # ultralight
 
+Ultralight is a simple tool to help novice web developers make simple client-side web apps that have stateful URLs, basic templating, and *that's it*. You can see a demo of Ultralight in action right here on the [gh-pages branch](http://billmills.github.io/ultralight/index.html?cats=1).
+
 **[Testing status](http://billmills.github.io/ultralight/tests/tests.html)**
 
 **Please cite v0.1 (current release) via:** [![DOI](https://zenodo.org/badge/3877/BillMills/ultralight.svg)](https://zenodo.org/badge/latestdoi/3877/BillMills/ultralight)
@@ -9,9 +11,6 @@ Version History:
 version | DOI
 --------|-------
 v0.1    | 10.5281/zenodo.31471
-
-
-Ultralight is a simple tool to help novice web developers make simple client-side web apps that have stateful URLs, basic templating, and *that's it*. You can see a demo of Ultralight in action right here on the [gh-pages branch](http://billmills.github.io/ultralight/index.html?cats=1).
 
 ## Why are we doing this?
 
