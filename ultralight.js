@@ -135,9 +135,4 @@ function ultralight(partials, dataLoader, callback){
 		    req.send();
 	  	});
 	}
-
-	this.dummy = function(){
-		return 'puzz'
-	}
-
 }
