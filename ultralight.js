@@ -13,11 +13,10 @@ function ultralight(partials, dataLoader, callback){
 	if(typeof callback === 'function')
 		this.callback = callback;	
 
-	this.parseQuery = function(){
+	this.parseQuery = function(queryString){
 		//return an object with keys/values as per query string
 		//note all values will be strings.
 
-		var queryString = window.location.search.substring(1);
 		var elts = {};
 		var value, i;
 
@@ -31,10 +30,12 @@ function ultralight(partials, dataLoader, callback){
 
 	}
 
-	this.matchQuery = function(){
-		//given the URL query as an object, render the appropriate templates
+	this.composeAuxilaryData = function(queryString){
+		// given a query string, return an object that contains key / values corrseponding to the query data as strings,
+		// plus any auxiliary data constructed by this.ulAuxilaryData.
+
 		var auxdata, auxkey, 
-			queryData = this.parseQuery();
+			queryData = this.parseQuery(queryString);
 
 		//add additional data as necessary
 		if(typeof this.ulAuxilaryData === 'function'){
@@ -45,25 +46,40 @@ function ultralight(partials, dataLoader, callback){
 			}
 		}
 
-		//render template
+		return queryData;		
+	}
+
+	this.generateHTML = function(){
+
+		var template, html,
+			queryData = this.composeAuxilaryData(window.location.search.substring(1))
+
 		template = document.getElementById('body').innerHTML;
-		html = Mustache.to_html(template, queryData, this.partials);
+		html =  Mustache.to_html(template, queryData, this.partials);
+		return html;
+
+	}
+
+	this.render = function(){
+		//render the templates
+
+		html = this.generateHTML();
 		body = document.createElement('body');
 		document.getElementsByTagName('body')[0].appendChild(body);
 		document.body.innerHTML += html;
 		return 0;
-
 	}
 
-	this.promisePartials = function(){
+	this.fetchTemplates = function(){
 		// pull in all partials async, by the power of promises
+		// then render page.
 
 		var sequence = Promise.resolve();
 		var partials = this.partials
 
 		sequence.then(function(){
-			return Promise.all(partials.map(ulUtilGet))
-		}).then(function(partials){
+			return Promise.all(partials.map(this.ulUtilGet))
+		}.bind(this)).then(function(partials){
 			for(i=0; i<partials.length; i++){
 				partial = document.createElement('script');
 				partial.setAttribute('type', 'text/template');
@@ -83,7 +99,7 @@ function ultralight(partials, dataLoader, callback){
 			ul.partials = partials;
 
 			//render the route
-			ul.matchQuery();
+			ul.render();
 
 			return ul
 		}).then(function(ul){
@@ -94,48 +110,46 @@ function ultralight(partials, dataLoader, callback){
 		});
 	}
 
-	this.promisePartials()
+	this.ulUtilGet = function(name){
+		// promise to get tempate <name>; thanks http://www.html5rocks.com/en/tutorials/es6/promises/
+		var rootURL, path;
 
-}
+		rootURL = window.location.protocol + "//" + window.location.host;
+		path = window.location.pathname.split('/').slice(0,-1);
+		for(i=0; i<path.length; i++){
+			rootURL += path[i] + '/'
+		}
 
-function ulUtilGet(name) {
-	// promise to get tempate <name>; thanks http://www.html5rocks.com/en/tutorials/es6/promises/
-	var rootURL, path;
+		url = rootURL + 'partials/' + name + '.mustache';
 
-	rootURL = window.location.protocol + "//" + window.location.host;
-	path = window.location.pathname.split('/').slice(0,-1);
-	for(i=0; i<path.length; i++){
-		rootURL += path[i] + '/'
+		// Return a new promise.
+	 	return new Promise(function(resolve, reject) {
+			// Do the usual XHR stuff
+	    	var req = new XMLHttpRequest();
+	    	req.open('GET', url);
+
+	    	req.onload = function() {
+	      		// This is called even on 404 etc
+	      		// so check the status
+	      		if (req.status == 200) {
+	        		// Resolve the promise with the response text
+	        		resolve(req.response);
+	      		}
+	      		else {
+	        		// Otherwise reject with the status text
+	        		// which will hopefully be a meaningful error
+	        		reject(Error(req.statusText));
+	      		}
+	    	};
+
+		    // Handle network errors
+		    req.onerror = function() {
+	    		reject(Error("Network Error"));
+	    	};
+
+		    // Make the request
+		    req.send();
+	  	});
 	}
 
-	url = rootURL + 'partials/' + name + '.mustache';
-
-	// Return a new promise.
- 	return new Promise(function(resolve, reject) {
-		// Do the usual XHR stuff
-    	var req = new XMLHttpRequest();
-    	req.open('GET', url);
-
-    	req.onload = function() {
-      		// This is called even on 404 etc
-      		// so check the status
-      		if (req.status == 200) {
-        		// Resolve the promise with the response text
-        		resolve(req.response);
-      		}
-      		else {
-        		// Otherwise reject with the status text
-        		// which will hopefully be a meaningful error
-        		reject(Error(req.statusText));
-      		}
-    	};
-
-	    // Handle network errors
-	    req.onerror = function() {
-    		reject(Error("Network Error"));
-    	};
-
-	    // Make the request
-	    req.send();
-  	});
 }

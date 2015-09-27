@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    	<!--Step 1: import mustache & ultralight-->
+    	<script src='https://cdn.rawgit.com/janl/mustache.js/master/mustache.js' type="text/javascript"></script>
+    	<script src='ultralight.js' type="text/javascript"></script>
+    	<!--Optional: import your auxilary data builder, if you need it.-->
+    	<script src='auxData.js' type="text/javascript"></script>
+
+        <!--Step 2: Create your page using traditional html + mustache templating. -->
+        <!--Assign an id of "body" and a route custom attribute.-->
+        <script id="body" type="text/template">
+			<h1>Welcome to Ultralight</h1>
+			<p>A scaffold for simple web apps.</p>
+
+			{{#images}}
+				{{> picture}}
+			{{/images}}
+
+			<p>How many Pixels can I offer you? You are currently enjoying {{cats}} Pixels.</p> 
+
+            <p>Pixel hates it when people break the web, so the number of Pixels will be encoded in the URL, allowing you to bookmark, share, and even use the back button to navigate Pixel. Also, each Pixel is rendered in their own partial template, thanks to <a href='https://github.com/janl/mustache.js/'>mustache.js</a>.
+            </p>
+
+			<ul>
+				<li><a href='?cats=1'>One Pixel</a></li>
+				<li><a href='?cats=2'>Two Pixels</a></li>
+				<li><a href='?cats=3'>Three Pixels</a></li>
+				<li><a href='?cats=4'>Four Pixels</a></li>
+				<li><a href='?cats=5'>Five Pixels</a></li>
+			</ul>
+        </script>
+
+        <!--Step 3: list your partials by filename if you're using any (optional)-->
+        <!--Create a new ultralight object & watch the magic happen!-->
+    	<script type='text/javascript'>
+	    	puzz = new ultralight(['picture'], loadCatData)
+            puzz.fetchTemplates();
+	    </script>
+
+    </head>
+</html>
