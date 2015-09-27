@@ -30,10 +30,12 @@ function ultralight(partials, dataLoader, callback){
 
 	}
 
-	this.matchQuery = function(){
-		//given the URL query as an object, render the appropriate templates
+	this.composeAuxilaryData = function(queryString){
+		// given a query string, return an object that contains key / values corrseponding to the query data as strings,
+		// plus any auxiliary data constructed by this.ulAuxilaryData.
+
 		var auxdata, auxkey, 
-			queryData = this.parseQuery(window.location.search.substring(1));
+			queryData = this.parseQuery(queryString);
 
 		//add additional data as necessary
 		if(typeof this.ulAuxilaryData === 'function'){
@@ -44,17 +46,31 @@ function ultralight(partials, dataLoader, callback){
 			}
 		}
 
-		//render template
+		return queryData;		
+	}
+
+	this.generateHTML = function(){
+
+		var template, html,
+			queryData = this.composeAuxilaryData(window.location.search.substring(1))
+
 		template = document.getElementById('body').innerHTML;
-		html = Mustache.to_html(template, queryData, this.partials);
-		body = document.createElement('body');
-		document.getElementsByTagName('body')[0].appendChild(body);
-		document.body.innerHTML += html;
-		return 0;
+		html =  Mustache.to_html(template, queryData, this.partials);
+		return html;
 
 	}
 
 	this.render = function(){
+		//render the templates
+
+		html = this.generateHTML();
+		body = document.createElement('body');
+		document.getElementsByTagName('body')[0].appendChild(body);
+		document.body.innerHTML += html;
+		return 0;
+	}
+
+	this.fetchTemplates = function(){
 		// pull in all partials async, by the power of promises
 		// then render page.
 
@@ -83,7 +99,7 @@ function ultralight(partials, dataLoader, callback){
 			ul.partials = partials;
 
 			//render the route
-			ul.matchQuery();
+			ul.render();
 
 			return ul
 		}).then(function(ul){
