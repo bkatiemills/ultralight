@@ -13,11 +13,10 @@ function ultralight(partials, dataLoader, callback){
 	if(typeof callback === 'function')
 		this.callback = callback;	
 
-	this.parseQuery = function(){
+	this.parseQuery = function(queryString){
 		//return an object with keys/values as per query string
 		//note all values will be strings.
 
-		var queryString = window.location.search.substring(1);
 		var elts = {};
 		var value, i;
 
@@ -34,7 +33,7 @@ function ultralight(partials, dataLoader, callback){
 	this.matchQuery = function(){
 		//given the URL query as an object, render the appropriate templates
 		var auxdata, auxkey, 
-			queryData = this.parseQuery();
+			queryData = this.parseQuery(window.location.search.substring(1));
 
 		//add additional data as necessary
 		if(typeof this.ulAuxilaryData === 'function'){
@@ -55,8 +54,9 @@ function ultralight(partials, dataLoader, callback){
 
 	}
 
-	this.promisePartials = function(){
+	this.render = function(){
 		// pull in all partials async, by the power of promises
+		// then render page.
 
 		var sequence = Promise.resolve();
 		var partials = this.partials
@@ -136,6 +136,8 @@ function ultralight(partials, dataLoader, callback){
 	  	});
 	}
 
-	this.promisePartials()
+	this.dummy = function(){
+		return 'puzz'
+	}
 
 }
