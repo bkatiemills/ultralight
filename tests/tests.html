@@ -14,19 +14,22 @@
         <div id="qunit-fixture"></div>
 
         <script>
-            QUnit.test( "integration", function( assert ) {
+            QUnit.test( "setup", function( assert ) {
 
-                //setup
                 var ul = new ultralight(['some', 'partials'])
                 assert.deepEqual(ul.partials, ['some', 'partials'], "ul.partials contains the first argument supplied, if it's an array")
 
-                ul = new ultralight(1)
+            });     
+
+            QUnit.test( "parseQuery", function( assert ) {
+                
+                var ul = new ultralight(1)
                 assert.deepEqual(ul.partials, [], 'ul.partials should be an empty array if anything but an array is passed in.')
 
                 //parseQuery
                 assert.deepEqual(ul.parseQuery('pixel=cat&bella=dog'), {'pixel': 'cat', 'bella': 'dog'}, 'parseQuery splits query string into key-value pairs')
 
-                
+
             });          
         </script>
       </body>
