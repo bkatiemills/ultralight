@@ -4,13 +4,11 @@ Ultralight is a simple tool to help novice web developers make simple client-sid
 
 **[Testing status](http://billmills.github.io/ultralight/tests/tests.html)**
 
-**Please cite v0.1 (current release) via:** [![DOI](https://zenodo.org/badge/3877/BillMills/ultralight.svg)](https://zenodo.org/badge/latestdoi/3877/BillMills/ultralight)
-
 Version History:
 
 version | DOI
 --------|-------
-v0.1    | 10.5281/zenodo.31471
+v0.1    | [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.31471.svg)](http://dx.doi.org/10.5281/zenodo.31471)
 
 ## Why are we doing this?
 
